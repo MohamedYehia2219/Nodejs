@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "title": "task1",
+        "body": "iti nodejs",
+        "checked": true
+    },
+    {
+        "id": 2,
+        "title": "task2",
+        "body": "mo yehia",
+        "checked": false
+    },
+    {
+        "id": 3,
+        "title": "task3",
+        "body": "hello from todo",
+        "checked": false
+    }
+]

@@ -1,6 +1,7 @@
 const fs= require('fs');
 const filePath = './db';
 
+//create file if not existed
 const fileIsExisted = function()
 {
     if(!fs.existsSync(filePath))
@@ -13,6 +14,7 @@ const fileIsExisted = function()
     }
 }
 
+//convert array to object
 const dataPrepare =function(dataArray)
 {
     const dataPreparation = dataArray.reduce((cum,e)=>{
@@ -24,4 +26,4 @@ const dataPrepare =function(dataArray)
 }
 
 module.exports={dataPrepare, fileIsExisted, fs, filePath};
-//hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+

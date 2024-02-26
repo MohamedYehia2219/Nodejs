@@ -38,8 +38,8 @@ userRoute.get("/:id",(req, res)=>{
 
 userRoute.put("/:id",(req, res)=>{
     userModel.findOneAndUpdate({_id: req.params.id}, req.body)
-    .then((usr)=>{
-        res.status(200).json(usr);
+    .then(()=>{
+        res.status(200).json({message: "updated successfully.."});
     })
     .catch(err=>{
         console.log(err);

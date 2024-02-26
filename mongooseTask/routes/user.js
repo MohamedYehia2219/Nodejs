@@ -3,7 +3,6 @@ const userRoute=express.Router();
 const userModel = require('../models/user')
 
 userRoute.post("/",(req,res)=>{
-    console.log("POST API !!!!!");
     let newUser=new userModel(req.body);
     newUser.save()
     .then(usr=>{

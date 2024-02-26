@@ -25,15 +25,18 @@ postRoute.get("/",(req, res)=>{
     })
 })
 
-postRoute.get("/:id",(req, res)=>{
+postRoute.get("/:id",async(req, res)=>{
     postModel.find({_id: req.params.id})
-    .then((post)=>{
-        res.status(200).json(post);
+    .then(async(post)=>{
+        let userCreator = await postModel.find({_id: req.params.id}).populate("creator");
+        console.log(userCreator[0].creator.name);
+       // res.status(200).json({post, owner: userCreator[0].creator.name});
+       res.status(200).json(post)
     })
     .catch(err=>{
         console.log(err);
         res.status(400).json({message:"Error"})
-    })
+    })    
 })
 
 postRoute.put("/:id",(req, res)=>{

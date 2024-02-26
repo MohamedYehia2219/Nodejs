@@ -16,6 +16,7 @@ mongoose.connect(DB_URL).then(()=>{console.log("connected to DB");}).catch((err)
 //application level middle ware
 server.use((req,res,next)=>{
     console.log(req.method , req.url);
+    next();
 })
 
 //routes

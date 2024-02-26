@@ -4,6 +4,7 @@ const DB_URL="mongodb://localhost:27017/test"
 const express =require('express');
 const mongoose = require('mongoose');
 const userRoute= require('./routes/user');
+const postRoute=require('./routes/post')
 
 const server = express();
 server.listen(PORT,()=>{console.log(`server is listening on port ${PORT}`);})
@@ -21,4 +22,5 @@ server.use((req,res,next)=>{
 
 //routes
 server.use("/users",userRoute);
+server.use("/posts", postRoute)
 

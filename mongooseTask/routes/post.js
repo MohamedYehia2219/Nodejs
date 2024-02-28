@@ -29,7 +29,7 @@ postRoute.get("/:id",async(req, res)=>{
     postModel.find({_id: req.params.id})
     .then(async(post)=>{
         let userCreator = await postModel.find({_id: req.params.id}).populate("creator");
-        console.log(userCreator[0].creator.name);
+        console.log(userCreator);
        // res.status(200).json({post, owner: userCreator[0].creator.name});
        res.status(200).json(post)
     })

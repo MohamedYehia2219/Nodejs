@@ -38,6 +38,7 @@ part1item1.onclick=function(){
     part1.appendChild(div);
 
     div.classList.add("popUp");
+    div.classList.remove("hidden");
 };
 
 img.onclick=function(){

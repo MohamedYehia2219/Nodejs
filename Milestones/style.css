@@ -154,8 +154,8 @@
     width: 40vw;
     background-color: dodgerblue;
     border: 2px solid white;
-    border-radius: 25px;
-    padding: 15px;
+    border-radius: 15px;
+    padding: 10px;
     text-align: center;
     position: absolute;
     left: 30vw ;
@@ -164,7 +164,7 @@
 .popUp img{
     width: 20px;
     height: 20px;
-    margin-left: 95%;
+    margin-left: 92%;
 }
 .popUp img:hover{
     cursor: pointer;

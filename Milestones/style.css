@@ -43,7 +43,7 @@
 }
 /**************************Intro***********************************/
 .intro{
-    height: 95vh;
+    height: 90vh;
     background-image: url("images/intro1.png"); 
     background-position: center;
     background-repeat: no-repeat;
@@ -52,31 +52,49 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
+    overflow: hidden;
+    transition: 0.5s;
 }
-.intro_Container{
-    border: 1px solid white;
-    border-radius: 20px 50px;
-    background-color: black;
-    opacity: 0.6;
-    padding: 15px;
+.intro::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 90vh;
+    background: rgba(0, 0, 0, 0.7); /* Black filter with 50% opacity */
+    z-index: 1; /* Ensure it’s above the background but below the content */
 }
-.intro_Container span{
-    color: white;
-    font-size: larger;
-    font-weight: bold;   
+.intro > * {
+    position: relative; /* Ensures child elements are above the overlay */
+    z-index: 2; /* Ensures content is above the black filter */
 }
-.intro_Container div{
-    width: 120px;
-    height:7px;
-    border-radius: 2px;
-    background-color: white;
-    margin-bottom: 10px;
-}
-.intro_Container p{
-    color: white;
-    font-size: medium;
-    font-weight: bold;
+.introText{
+    font-size: 85px; 
+    font-weight: bolder ; 
+    color: whitesmoke; 
+    text-transform: uppercase;
+    text-shadow: 
+        1px 1px 0 #2980b9, /* Shadow to the bottom-right */
+        2px 2px 0 #1f6397, /* Shadow slightly further */
+        3px 3px 0 #1c5676, /* Further shadow for depth */
+        4px 4px 0 #154d61; 
+    line-height: 1.5; /* Adjust line height for spacing */
+    text-align: center; /* Center-align the text */
+    white-space: pre-wrap; /* Ensure line breaks are respected */
+    max-width: 90%; /* Ensure text does not overflow */
+    margin: 20px auto; /* Center the element */    
+    animation: slideDown 5s infinite; /* Apply animation */
+    transition: 0.5s;
+} 
+@keyframes slideDown {
+    from {
+        transform: translateY(-100px); /* Start 100px above its original position */
+        opacity: 0; /* Start as invisible */
+    }
+    to {
+        transform: translateY(0); /* End at its original position */
+        opacity: 1; /* End as fully visible */
+    }
 }
 /**************************parts***********************************/
 .part{
@@ -91,12 +109,6 @@
     font-size: x-large;
     font-weight: bold;  
     margin-top: 50px;
-}
-.line{
-    height:7px;
-    border-radius: 2px;
-    background-color: darkblue;
-    margin-bottom: 10px;
 }
 .items{
     width: 100%; 
@@ -141,13 +153,42 @@
 }
 /**************************footer***********************************/
 .footer{
-    text-align: center;
     background-color: darkblue;
-    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px;
+    margin-top: 70px;
+    flex-wrap: wrap;
+}
+.intro_Container{
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.intro_Container p{
+    color: whitesmoke;
+    font-size: medium;
+}
+.contact{
+    background-color: whitesmoke; 
+    opacity: 0.9;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    padding: 10px;   
+}
+.contact h5{
+    text-align: center;
+    font-weight: bolder;
+    font-size: x-large;
+    margin-bottom: 15px;
 }
 .contactInfo{
-    color: white;
+    color: black;
 }
 /**************************pop up window***********************************/
 .popUp{
@@ -179,5 +220,11 @@
 @media(max-width:1200px){
     .items{
         flex-wrap: wrap;
+    }
+}
+@media(max-width:900px){
+    .introText{
+        font-size: 45px;
+        max-width: 95%;
     }
 }

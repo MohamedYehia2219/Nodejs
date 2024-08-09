@@ -1,7 +1,3 @@
-// paragraph with each image (big font) with animation.
-// about us
-
-// slide show
 let introSection = document.querySelector("section[class=intro]");
 let index=2;
 let id = setInterval(()=>{
@@ -150,3 +146,18 @@ part3item4.onclick=function(){
     div.style.top=window.scrollY+250+"px";   
     div.classList.remove("hidden");
 };
+
+//***************************************************Side Bar*************************************** */
+let p1 = "Our mission is to deliver world-class knowledge"
+let p2 = "Technology and Expertise to empower local talent"
+let text = p2;
+let toggle = false; 
+let introSectionText = document.querySelector("p[class=introText]");
+let id2 = setInterval(()=>{
+    introSectionText.innerText=`${text}`;
+    toggle = !toggle;
+    if(toggle)
+        text = p1;
+    if(!toggle)
+        text = p2;
+},5000)

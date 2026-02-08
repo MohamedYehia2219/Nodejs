@@ -1,0 +1,351 @@
+> var:
+ 	- Hoisting with initialization.
+ 	- function scope.
+ 	- can be redeclared.
+> let:
+ 	- Hoisting without initialization on Temporal Dead Zone (TDZ).
+ 	- block scope.
+ 	- can be reassign.
+> const:
+ 	- Hoisting without initialization on Temporal Dead Zone (TDZ).
+ 	- block scope.
+ 	- must be initialized when declaration.
+ 	- cannot be reassign.
+
+- Hoisting: variables take place in the memory before executing in the code.
+- TDZ: space from the scope beginning until the declaration line, in this space cannot use the variable before initialization.
+- const is immutable as reference but it can change the content or value of this reference.
+- we use const more to prevent the reassign.
+----------------------------------------------------------------------------
+- there are Global scope, Function scope and Block scope.
+
+- Closure: method that remember the variables of outer scope (lexical env) as in JS the inner method take the reference of the variable not copy and GC don not remove this even the outer method is finished because the inner one still use it.
+- Closure is used in caching.
+
+- this: In JS, this is determined by how a function is called, not where it is defined.
+- this: is determined in runtime.
+- this: in arrow functions its refer to parent level.
+let obj1 =  {name: "mo", fun(){console.log(this.name)}}
+let obj2 =  {name: "mo", fun = ()=>{console.log(this.name)}}
+obj1.fun(); 	//mo
+obj2.fun();	//undefined
+- in the obj2, this refer to global because of the arrow method.
+----------------------------------------------------------------------------
+- call: call the method immediately, takes separated arguments.
+- apply: call the method immediately, takes arguments as list.
+- bind: return copy of the function to be used later.
+----------------------------------------------------------------------------
+- JS is a high level language used in a browser or Nodejs.
+- Nodejs is an open source, cross platform, JS runtime environment outside the browser.
+- Nodejs has V8 engine same as Google Chrome browser. V8 engine is consider a compiler developed from google and written in C++ that converts JavaScript code into machine code.
+- Nodejs is written in JS, C++ (for OS) and other languages.
+- why C++? as C++ is a low level lang that helps Nodejs to access OS, fs and other resources.
+- Browser > provide web apis like (window, DOM, console) to be accessed in JS. So window and document are not part of the core JavaScript language and cannot be used outside the browser.
+- Nodejs > has console also and others features like what existed in the browser but they are not the same. They are not web apis, they are part of the Nodejs environment.
+
+- Nodejs is single thread act as multi thread (non blocking) because of the Event loop.
+- pros: web api handle any async task so it won not block the thread.
+- cons: any intensive task in call stack (sync) like huge loop will block the thread until finish (block thread).
+- solution: we can convert any sync request to async one, or we can use (worker thread) to make separate thread on the CPU for intensive tasks.
+----------------------------------------------------------------------------
+> EventLoop:
+1 - JS engine execute sync tasks in call stack.
+2 - JS engine send async tasks to Web API (Browser) or Libuv in (Nodejs) which is C++ library manages the Eventloop and implements async I/O.
+3 - Libuv send I/O or heavy CPU operations to thread pool.
+4 - Once an async operation completes, Libuv send its callback into the callback queue (micro and macro) queue.
+5 - Eventloop pulls tasks from queues and pushes them into Call Stack with the execution periority, then JS engine execute it.
+
+- promises.then(), async/await in Microtask queue.
+- setImmediate, timers, I/O, fs, events tasks in Macrotask queue.
+- Microtask has priority than Macrotask.
+- process.nextTick has priority than micro queue tasks.
+
+> Thread Pool:
+- a set of threads in the background used to perform I/O or CPU-heavy operations like hashing, encryption, zip.
+- Not all async operations use thread pool.
+- they are 4 threads by default, process.env.UV_THREADPOOL_SIZE = 8;
+- async fs.readFile(): libuv send the fun to thread pool to read the file, then go to the macro queue to execute the callback.
+
+> process.nextTick use callback method to be executed after sync code and before any promise. 
+
+> Note: The Promise constructor runs synchronously, but .then() callbacks run asynchronously as microtasks.
+----------------------------------------------------------------------------
+- Callback: function parameter inside another function, it is the first way for async in JS.
+- Promise:
+ 	- solve Callback Hell.
+ 	- object represent task will happen in future.
+ 	- it may be pending, fulfilled, rejected.
+ 	- it handle errors using .catch()
+ 	- resolve() to clarify that promise executed successfully.
+ 	- promise without .then() execute sync.
+ 	- .then() make the promise async task in microtask.
+ 	- .then() return promise, register promise resolve callback.
+ 	- promise.all(): execute more then promise in parallel way, if one failed, all 				failed.
+ 	- promise.race(): return the first fast promise either success or fail.
+ 	- promise.any(): return the first successful promise.
+- async await: syntax sugar for promise, handle errors using try and catch.
+----------------------------------------------------------------------------
+> Execution Context:
+1. Global Execution Context: once run the code.
+2. Function Execution Context: once call any function.
+3. Eval Execution Context: when use eval().
+
+> Lifecycle of Execution Context:
+1. Creation Phase:
+	- declare variables and functions.
+	- specify functions scope.
+	- this binding.
+	- Hoisting.
+2. Execution Phase:
+	- variables initialization.
+	- implement line by line.
+----------------------------------------------------------------------------
+> Prototype:
+- JS is prototype-based language.
+- prototype is exist in functions constructors to specify what the objects will inherit.
+- JS uses prototype inheritance where objects inherit directly from other objects, which is better for memory.
+- each object has __proto__ that refer to the parent object.
+- class in JS is syntax sugar to the prototype.
+
+> Immediately Invoked Function Expression (IIFE):
+- IIFE is a function expression that runs immediately after it is defined. It is mainly used to create a private scope.
+----------------------------------------------------------------------------
+> Modules:
+1- core modules: built-in modules in Nodejs like (fs, OS, path, http, path).
+2- custom modules: local modules that we create as JS file.
+3- third party modules: modules that we install via npm.
+
+- any module is wrapped in a function and that function is called immediately when it is loaded.
+- once the module is loaded, the module is cached in the memory to avoid loading it again for the performance.
+----------------------------------------------------------------------------
+> fs:
+- load the entire data in memory one time.
+- fs.readFileSync(): block main thread.
+- fs.readFile(): the async way, thread pool, macro queue.
+
+> Streams:
+- proccess large data chunk by chunk instead of loading it entirely into memory, improving performance and memory efficiency.
+
+- streams types:
+1. Readable Stream: read data.
+2. Writable Stream: write data.
+3. Duplex Stream: read and write.
+4. Transform Stream: read data, transform (like encryption, zip), write.
+
+- pipe(): connect streams, better performance.
+fs.createReadStream('file.txt').pipe(fs.createWriteStream('copy.txt'));
+
+- Backpressure: occurs when a writable stream cannot handle incoming data fast enough, so Node temporarily pauses the readable stream to prevent memory overflow.
+- pipe() apply the Backpressure internal.
+
+> Buffer: 
+- node cannot access memory direct, it use buffer to deal with binary data in memory (files, streams, networking, encryption).
+----------------------------------------------------------------------------
+> Node process (app) use one core in CPU.
+
+> Cluster:
+	- allow make more than node process (instances of the same app) on other cors on the 	same server, each instance called (worker process) and each one has its own memory 	and eventloop.
+	- pros: suitable for scaling server requests, OS distribute requests between 	instances.
+	- cons: each worker has its own memory so its hard to share data, so we need Redis 	caching.
+	- cluster consume more memory (RAM) and the communication between workers is 	slower.
+
+> Worker Thread:
+	- make another thread in the same process for heavy CPU tasks.
+	- threads share the same memory, so consume less memory. 
+
+> Why there are worker threads although Node is single thread?
+- as the single thread is related to behaviour of JS itself, but Node allow make multible threads in the background.
+
+> Load Balancer:
+	- distribute requests between servers.
+	- used in horizontal scaling.
+
+- Vertical Scaling: increase RAM (Cluster).
+- Horizontal Scaling: deploy the app on more than server.
+
+> Load Balancer > Cluster > worker thread
+----------------------------------------------------------------------------
+> Express: 
+- It is a framework built on Nodejs http module.
+- In Http module, it was hard to manage routing so it was hard to make scalable service, parse body was manually and (No) middlewares.
+
+> Middlewares:
+- It is a function that request pass through it. (req, res, next)
+- Types:
+1. Application Middleware: 
+	- Runs on entire app.
+	- app.use(express.json()) for body parsing.
+2. Route Middleware:
+	- Runs on specific route.
+	- like authMiddleware, Multer and Request validation libraries.
+3. Error Handling Middleware:
+	- to catch any exception.
+	- special middleware with 4 params (err, req, res, next).
+
+- Request life cycle:
+client request > DNS to convert domain to IP address > web server > web app > DB.
+- URL: method, protocol, domain, port, params, query params.
+- Headers: include Authorization token, cookies, Content-Type.
+- PUT update entire row but PATCH update specific fields.
+- Request body validation: zod, joi, express-validator.
+----------------------------------------------------------------------------
+> status code:
+- 100 : 199 ~ informational.
+- 200 : 299 ~ success.
+- 201 : created successfully.
+- 300 : 399 ~ redirection.
+- 400 : 499 ~ client error (bad request).
+- 401 : not authenticated.
+- 403 : not authorized.
+- 404 : not found.  
+- 500 : 599 ~ server error.
+
+> Pagination:
+- apply on DB level, not applicatin code.
+- offset (skip) = (page - 1) * limit.
+- let users = await UserModel.find().skip(offset).limit(limit);
+
+> json response:
+- succes: {success: true, message: "", data: []}
+- fail: {success: false, message: ""}
+
+- use query params with pagination, filtering, sorting.
+- use params with resource identifier.
+
+> Versioning: 
+- keeping multiple versions of the API so we can update it without breaking old clients.
+- app.use("/api/v1/users", usersV1Routes);
+- app.use("/api/v2/users", usersV2Routes);
+
+> DTO: data sent to client or in response.
+- DB data > mapping > DTO data > response.
+----------------------------------------------------------------------------
+> Security:
+- Authentication: register, login, token.
+- Authorization: roles and permissions.
+- bcrypt: package used to hash passworrd, hash(), compare().
+- hash: one way encryption.
+- encryption: two way, encryption and decryption.
+- jwt.sign(): generate access token.
+- jwt.verify(): verify token in authMiddleWare.
+- JWT is stateless, server doesn not save it, each request header should contain token.
+- cookies are sent in each request by default.
+- logout in jwt: Short access tokens and Delete refresh token.
+- Refresh token should be stored securely.
+
+1. login
+2. server send (access token) that should expire in (short) time and stored in (cookie) as it should be sent in each request.
+3. server send also (Refresh Token) that still for (long) time and stored in (httpOnly Cookie) which is not accessible by JS.
+4. client send accesstoken in each request.
+5. if the access token is expired, client send the refresh token instead.
+6. server generate a new access token. 
+
+> XSS (Cross-Site Scripting):
+	- attacker injects malicious JS code into your page, and the browser executes it.
+	- steal cookies via JS access.
+	- solution: http only cookies and helmet().
+
+> CSRF (Cross-Site Request Forgery):
+	- malicious website makes user sent request to its websites without knowing.
+	- cookies will sent by default.
+	- solution: CSRF token, sameSite cookies and Preflight Request.
+
+> SQL and No SQL Injection:
+	- inject native DB code.
+	- may get, update or delete data.
+	- solutions: ORM, ODM.
+
+> Rate Limiting:
+	- specify number of requests for each user per specific time.
+	- require("express-rate-limit");
+
+> CORS (Cross-Origin Resource Sharing):
+	- browser restriction not server restriction.
+	- specify which domains that JS can access response.
+	- Access-Control-Allow-Origin, Access-Control-Allow-Methods.
+
+> Helmet: 
+	- Helmet is an Express middleware that sets security-related HTTP headers.
+
+>> Protect API via: validation, auth, rate limit, middlewares.
+----------------------------------------------------------------------------
+> MongoDB:
+- It is a No SQL DB, collections and documents, it is a schema less DB.
+- each document has _id from type (ObjectId) which is unique identifier.
+- No join in it, relations in mongoDB may be (Embedded: [{}]) for simple data, or may be (Referenced: ObjectId()) for large data.
+
+> Mongoose (ODM):
+- provide schema validation { type: String, required: true }.
+- protect from No SQL injection.
+- has Middleware (hooks) to check specific logic before apply DB operation, userSchema.pre("save", function(next){ //logic; next(); }
+- Populate (Join), user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+
+- There are no Stored Procedures or Triggers in MongoDB, instead of trigger we can use:
+1. mongoose middleware.
+2. MongoDB Atlas Cloud Trigger.
+
+- Aggregation: process and transform data and generate specific one value.
+- $match (where in SQL).
+----------------------------------------------------------------------------
+> SQL (Structured Query Language):
+- relational DB, tables and rows, fixed schema.
+- weak entity: entity that is depend on another strong entity which if is removed, this weak entity will be removed also, It has partial key.
+
+- Data Definition Language (DDL): define or modify the database schema or structure, [create, alter, drop, truncate, rename].
+- Data Manipulation Language (DML): manage data, [insert, update, delete].
+- Data Query Language (DQL): fetch data, [select].
+- Data Control Language (DCL): Commands that deal with user permissions and ensuring database security, [grant, envoke, deny].
+- Transaction Control Language (TCL): Commands used to manage transactions, [commit, rollback].
+
+- Drop: remove the table itself from DB.
+- Truncate: remove all records from the table but keep the table structure.
+- Delete: remove specific rows based on condition.
+- Truncate is used to empty large tables as it is faster than delete. 
+
+- Cross join, Inner join, left outer join, right outer join, full outer join.
+
+- Function: Used to return a calculated value and can be used inside SELECT.
+- Stored Procedure: Used to execute a set of SQL statements logic, better for performance.
+- View: virtual table created from a SELECT query, security.
+- Trigger: Automatically executes in response to database events.
+----------------------------------------------------------------------------
+> Index:
+- improves read performance by reducing full table scans, as it apply B-tree on the index fields, O(log n) instead of O(n).
+- Types: Primary Index, Unique Index, Composite Index.
+- it slows down write operations because the database must maintain index structures on every insert, update, or delete.
+- index will be useless in small or repeated data.
+----------------------------------------------------------------------------
+> Supabase:
+- It is an open-source backend service built on PostgreSQL.
+- It offers authentication, storage, auto-generated APIs, and row-level security (RLS).
+- when craete table, DB generate auto APIs to use it.
+- RLS Poliy: specify who can view or write in specific rows. 
+----------------------------------------------------------------------------
+> Redis Caching:
+- cach the frequent data in memory.
+- Redis: Remote Dictionary Server, Key-Value store.
+- request > redis > if no cached data > DB.
+- Redis: in memory, temporary, simple queries.
+- DB: in Disk, permenant, complex queries. 
+----------------------------------------------------------------------------
+> Websocket:
+- HTTP: client send request then receive response.
+- WS: Real time communication, client always listen on server, Two-way communication.
+- WS is used in real time apps like chat, notifictions.
+- WSS: WS + TLS (security layer for data encryption).
+----------------------------------------------------------------------------
+> CI/CD: 
+- Continuous Integration / Continuous Delivery (or Deployment).
+Developer pushes code > CI server runs tests > Manual/auto deploy to production.
+- GitHub Action and GitLab CI/CD can do the full pipeline.
+----------------------------------------------------------------------------
+> Nest:
+- Node.js framework built on Express, Type script and DI.
+- structured (Controllers, Services).
+- use with large projects like Microservices or scalable architecture.
+- Angular Architecture.
+----------------------------------------------------------------------------
+
+
+
+
